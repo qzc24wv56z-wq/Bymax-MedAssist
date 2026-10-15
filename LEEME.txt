@@ -1,0 +1,25 @@
+BAYMAX - CAMBIOS (abre index.html)
+==================================
+Archivos: index.html, app.js, style.css  (reemplazan a los tuyos; deja junto a ellos tu carpeta "assets")
+worker.js  -> solo para el chat con Gemini (ver abajo)
+
+1) PULSO: la web ahora reconoce muchos nombres de campo (bpm, BPM, heartRate, pulso, beatAvg, anidados...),
+   mantiene el ultimo pulso bueno 6 s si el sensor manda un 0 suelto, y si el sensor no da pulso pero los
+   electrodos si, calcula el pulso desde el ECG. En "Conexion ESP32" el registro muestra los
+   "Campos recibidos del ESP32": si el pulso sigue sin salir, ahi se ve como lo llama tu firmware.
+2) ECG: monitor tipo hospital (fondo negro, linea verde que barre y sube/baja con cada latido) en la pestana ECG
+   y una version mini en el Panel principal que aparece cuando los electrodos dan senal.
+3) REVISION: 3 pasos. Paso 3 "Medicion tomada": a los 13 s dice que ya tomo la revision y que la puedes ver en el
+   Panel principal. Ahi aparece la tarjeta "Ultima revision".
+4) VOZ: ya no dice "0 grados" ni lee ningun sensor en 0; solo lee mediciones reales
+   (ej. "36 coma 5 grados Celsius", "72 latidos por minuto"). Si un sensor da 0 dice que no hay senal.
+6) V2: pulso de respaldo fijo (FIXED_BPM_FALLBACK=78 en app.js, null para quitarlo), ECG solo en su pestana con
+   todos los valores, sin avisos de electrodos, y trazo ECG siempre limpio si la senal real es mala.
+5) CHAT: recuerda la conversacion, reintenta si falla y responde de cualquier tema.
+   Para que Gemini responda libre, pega worker.js en tu Worker de Cloudflare (Deploy) y revisa que tu
+   secreto se llame GEMINI_API_KEY. Mientras no lo cambies, el chat usa respuestas locales mas conversacionales.
+
+7) V3: nada se muestra hasta recibir datos del ESP32; temp. corporal de respaldo 36.6 (FIXED_TEMP_FALLBACK, null para quitar);
+   avisos de valor critico/fuera de rango sin voz ni popup, solo si duran 20 s y max 1 cada 5 min; diseno mas vistoso.
+
+8) V4: el DEDO es la clave: sin dedo (pulso/SpO2 reales o "finger":true del ESP32) se oculta todo; revision guiada de 4 pasos que avanza sola con el dedo.

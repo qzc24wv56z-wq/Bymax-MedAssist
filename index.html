@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Baymax · Asistente de Bienestar</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='58' rx='40' ry='36' fill='%23ffffff' stroke='%23E6E9F2' stroke-width='3'/%3E%3Ccircle cx='34' cy='54' r='7.5' fill='%231E2130'/%3E%3Ccircle cx='66' cy='54' r='7.5' fill='%231E2130'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=12">
+</head>
+<body>
+
+<!-- ===================== BOOT SCREEN ===================== -->
+<div id="bootScreen">
+  <div class="boot-bg" aria-hidden="true">
+    <div class="boot-grid"></div>
+    <div class="pulse-rings"><span></span><span></span><span></span><span></span></div>
+    <div class="boot-particles">
+      <span class="dot p1"></span><span class="spark p2"></span><span class="plus p3"></span>
+      <span class="dot p4"></span><span class="spark p5"></span><span class="dot p6"></span>
+      <span class="plus p7"></span>
+    </div>
+    <svg class="boot-ecg" viewBox="0 0 600 120" preserveAspectRatio="none">
+      <path d="M0,60 L40,60 L50,52 L60,60 L75,60 L88,20 L98,100 L108,45 L120,60 L140,60 L160,55 L172,60 L200,60 L200,60 L240,60 L250,52 L260,60 L275,60 L288,20 L298,100 L308,45 L320,60 L340,60 L360,55 L372,60 L400,60 L400,60 L440,60 L450,52 L460,60 L475,60 L488,20 L498,100 L508,45 L520,60 L540,60 L560,55 L572,60 L600,60"></path>
+      <circle class="ecg-dot" r="3.5">
+        <animateMotion dur="3.6s" repeatCount="indefinite" rotate="auto"
+          path="M0,60 L40,60 L50,52 L60,60 L75,60 L88,20 L98,100 L108,45 L120,60 L140,60 L160,55 L172,60 L200,60 L200,60 L240,60 L250,52 L260,60 L275,60 L288,20 L298,100 L308,45 L320,60 L340,60 L360,55 L372,60 L400,60 L400,60 L440,60 L450,52 L460,60 L475,60 L488,20 L498,100 L508,45 L520,60 L540,60 L560,55 L572,60 L600,60"/>
+      </circle>
+    </svg>
+  </div>
+  <div class="boot-inner">
+    <div class="boot-logo-wrap">
+      <div id="bootFaceWrap"><div class="baymax-face" data-status="normal"><div class="mascot-shadow"></div><div class="mascot-body"><span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span><span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span><span class="mascot-chest"></span></div><div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div></div></div>
+      <div class="boot-logo">BAYMAX</div>
+      <div class="boot-collab">
+        <span class="boot-collab-eyebrow">Una colaboración con</span>
+        <div class="boot-collab-row">
+          <span class="boot-collab-label">BAYMAX</span>
+          <span class="boot-collab-x">×</span>
+          <div class="boot-collab-school">
+            <img src="assets/img/colegio-lourdes.png" alt="Colegio Lourdes" class="boot-collab-logo">
+            <span class="boot-collab-schoolname">Colegio Lourdes<small>Ahuachapán</small></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="boot-status" id="bootStatusText">Iniciando sistemas de cuidado personal…</div>
+    <div class="boot-progress"><div class="boot-progress-bar" id="bootProgressBar"></div></div>
+    <div class="boot-hello" id="bootHello">Hola. Soy Baymax, tu asistente personal de bienestar.</div>
+    <button class="btn btn-primary btn-lg" id="btnBootStart">Comenzar</button>
+  </div>
+</div>
+
+<!-- ===================== PANTALLA "PREPARANDO EXPERIENCIA" ===================== -->
+<div class="modal-overlay hidden" id="prepScreen">
+  <div class="prep-card">
+    <div class="prep-ring"><div class="baymax-face" data-status="scanning"><div class="mascot-shadow"></div><div class="mascot-body"><span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span><span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span><span class="mascot-chest"></span></div><div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div></div></div>
+    <h2>Preparando tu experiencia…</h2>
+    <p id="prepMsg">Calibrando sensores y ajustando mi personalidad de cuidado.</p>
+    <div class="prep-steps" id="prepSteps"></div>
+  </div>
+</div>
+
+<!-- ===================== MODAL DE REGISTRO ===================== -->
+<div class="modal-overlay hidden" id="welcomeModal">
+  <div class="modal-card reg-card">
+    <div class="baymax-face" id="welcomeFace" data-status="normal"><div class="mascot-shadow"></div><div class="mascot-body"><span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span><span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span><span class="mascot-chest"></span></div><div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div></div>
+    <h2 id="welcomeGreeting">Antes de comenzar</h2>
+    <p>Necesito conocerte un poco para acompañarte mejor. Los campos marcados son necesarios para que pueda cuidarte bien.</p>
+
+    <div class="reg-progress">
+      <div class="reg-progress-fill" id="regProgressFill"></div>
+    </div>
+
+    <form id="regForm" novalidate>
+      <div class="reg-grid">
+        <div class="modal-field">
+          <label for="regName">Nombre <span class="req">*</span></label>
+          <input type="text" id="regName" placeholder="Ej. Sofía" required minlength="2" autocomplete="given-name">
+          <span class="field-error" id="errName"></span>
+        </div>
+        <div class="modal-field">
+          <label for="regLastname">Apellido <span class="req">*</span></label>
+          <input type="text" id="regLastname" placeholder="Ej. Martínez" required minlength="2" autocomplete="family-name">
+          <span class="field-error" id="errLastname"></span>
+        </div>
+        <div class="modal-field">
+          <label for="regAge">Edad <span class="req">*</span></label>
+          <input type="number" id="regAge" placeholder="Ej. 27" min="1" max="120" required>
+          <span class="field-error" id="errAge"></span>
+        </div>
+        <div class="modal-field">
+          <label for="regPhone">Teléfono <span class="req">*</span></label>
+          <input type="tel" id="regPhone" placeholder="Ej. 7123 4567" required autocomplete="tel">
+          <span class="field-error" id="errPhone"></span>
+        </div>
+        <div class="modal-field span2">
+          <label for="regEmail">Correo electrónico <span class="req">*</span></label>
+          <input type="email" id="regEmail" placeholder="tucorreo@ejemplo.com" required autocomplete="email">
+          <span class="field-error" id="errEmail"></span>
+          <span class="field-hint">Aquí te enviaré un resumen cada vez que hagas una revisión.</span>
+        </div>
+      </div>
+
+      <div class="modal-field">
+        <label>Foto de perfil <span class="hint-inline">(opcional)</span></label>
+        <div class="photo-row">
+          <div class="photo-preview empty" id="regPhotoPreview">📷</div>
+          <div class="photo-actions">
+            <input type="file" id="regPhotoInput" accept="image/*" class="hidden">
+            <button class="btn btn-ghost btn-sm" id="btnRegPhotoUpload" type="button">Subir imagen</button>
+            <button class="btn btn-ghost btn-sm" id="btnRegPhotoCamera" type="button">Tomar foto</button>
+            <button class="btn btn-ghost btn-sm" id="btnRegPhotoAvatar" type="button">Elegir avatar</button>
+            <button class="btn btn-ghost btn-sm hidden" id="btnRegPhotoRemove" type="button">Quitar</button>
+          </div>
+        </div>
+        <div class="avatar-grid hidden" id="avatarGrid"></div>
+        <div class="camera-box hidden" id="cameraBox">
+          <video id="cameraVideo" autoplay playsinline></video>
+          <div class="camera-actions">
+            <button class="btn btn-primary btn-sm" id="btnCameraShot" type="button">Capturar</button>
+            <button class="btn btn-ghost btn-sm" id="btnCameraCancel" type="button">Cancelar</button>
+          </div>
+        </div>
+        <canvas id="cameraCanvas" class="hidden"></canvas>
+      </div>
+
+      <div class="reg-section-title">Tu salud <span class="hint-inline">(opcional, me ayuda a cuidarte mejor)</span></div>
+      <div class="modal-field">
+        <label>¿Tomás algún medicamento?</label>
+        <div class="yn-row" data-yn="meds">
+          <button type="button" class="yn-btn" data-val="no">No</button>
+          <button type="button" class="yn-btn" data-val="si">Sí</button>
+        </div>
+        <input type="text" id="regMedsDetail" class="hidden" placeholder="¿Cuál? Ej. Salbutamol, metformina…" maxlength="120">
+      </div>
+      <div class="modal-field">
+        <label>¿Padecés alguna enfermedad?</label>
+        <div class="yn-row" data-yn="cond">
+          <button type="button" class="yn-btn" data-val="no">No</button>
+          <button type="button" class="yn-btn" data-val="si">Sí</button>
+        </div>
+        <input type="text" id="regCondDetail" class="hidden" placeholder="¿Cuál? Ej. asma, diabetes, hipertensión…" maxlength="120">
+      </div>
+
+      <div class="reg-section-title">Contacto de emergencia <span class="hint-inline">(opcional)</span></div>
+      <p class="field-hint" style="margin:-4px 0 10px;">Si agregás su teléfono, aparecerá un botón flotante de WhatsApp para enviarle tus datos y recomendaciones (con código de país o sin él: por defecto +503).</p>
+      <div class="reg-grid">
+        <div class="modal-field">
+          <label for="regEmgName">Nombre</label>
+          <input type="text" id="regEmgName" placeholder="Ej. Mamá" autocomplete="off">
+        </div>
+        <div class="modal-field">
+          <label for="regEmgPhone">Teléfono</label>
+          <input type="tel" id="regEmgPhone" placeholder="Ej. 7123 4567" autocomplete="off">
+          <span class="field-error" id="errEmgPhone"></span>
+        </div>
+        <div class="modal-field span2">
+          <label for="regEmgEmail">Correo</label>
+          <input type="email" id="regEmgEmail" placeholder="contacto@ejemplo.com" autocomplete="off">
+          <span class="field-error" id="errEmgEmail"></span>
+        </div>
+      </div>
+
+      <div class="modal-field">
+        <label>¿Cómo te sentís hoy?</label>
+        <div class="mood-grid" id="regMoodGrid">
+          <button class="mood-btn" data-mood="Muy bien" type="button">😊<span>Muy bien</span></button>
+          <button class="mood-btn" data-mood="Bien" type="button">🙂<span>Bien</span></button>
+          <button class="mood-btn" data-mood="Normal" type="button">😐<span>Normal</span></button>
+          <button class="mood-btn" data-mood="Mal" type="button">😔<span>Mal</span></button>
+          <button class="mood-btn" data-mood="Muy mal" type="button">😣<span>Muy mal</span></button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg" id="btnStart" type="submit">Comenzar mi cuidado</button>
+    </form>
+    <div class="reg-divider"><span>o</span></div>
+    <button class="btn btn-ghost btn-lg" id="btnGuest" type="button">Continuar como invitado</button>
+    <p class="reg-guest-hint">Podrás usar Baymax sin registrarte, aunque no voy a poder personalizar tus datos ni enviarte resúmenes por correo.</p>
+  </div>
+</div>
+
+<div class="shell hidden" id="appShell">
+  <header class="top">
+    <div class="brand">
+      <button class="hamburger-btn" id="btnMenu" type="button" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="baymax-face brand-face" data-status="normal"><div class="mascot-shadow"></div><div class="mascot-body"><span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span><span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span><span class="mascot-chest"></span></div><div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div></div>
+      <div class="brand-text">
+        <h1>Baymax <span>Health Assistant</span></h1>
+        <p>Monitoreo de bienestar conectado a tu ESP32</p>
+      </div>
+    </div>
+    <div class="top-right">
+      <span class="clock" id="clock">--:--</span>
+      <button class="pill" id="btnVoiceToggle" data-state="on" type="button">
+        <span id="voiceIcon">🔊</span>
+        <span id="voiceLabelText">Voz activada</span>
+      </button>
+      <div class="pill" id="connPill" data-state="offline">
+        <span class="dot"></span>
+        <span id="connPillText">ESP32 desconectado</span>
+      </div>
+      <button class="pill avatar-pill" id="btnMyProfile" type="button">
+        <span class="avatar-mini" id="avatarMini">🧑</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabsNav">
+    <button class="tab-btn active" data-tab="panel">Panel principal</button>
+    <button class="tab-btn" data-tab="revision">Revisión</button>
+    <button class="tab-btn" data-tab="latidos">Latidos</button>
+    <button class="tab-btn" data-tab="bienestar">Bienestar</button>
+    <button class="tab-btn" data-tab="ecg">ECG</button>
+    <button class="tab-btn" data-tab="historial">Historial</button>
+    <button class="tab-btn" data-tab="notif">Notificaciones <span id="notifCount"></span></button>
+    <button class="tab-btn" data-tab="sistema">Sistema</button>
+    <button class="tab-btn" data-tab="config">Configuración</button>
+    <button class="tab-btn" data-tab="conexion">Conexión ESP32</button>
+  </nav>
+  <div class="menu-backdrop" id="menuBackdrop"></div>
+
+  <!-- ===================== PANEL PRINCIPAL ===================== -->
+  <section class="view active" id="view-panel">
+    <div class="hero">
+      <div class="hero-face-col">
+        <div class="baymax-face" id="heroFace" data-status="offline"><div class="mascot-shadow"></div><div class="mascot-body"><span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span><span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span><span class="mascot-chest"></span></div><div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div></div>
+        <div class="hero-heart" id="heroHeart">❤️</div>
+      </div>
+      <div class="hero-info">
+        <h2 id="heroGreeting">¿Cómo estás hoy?</h2>
+        <div class="status-line"><span class="status-badge offline" id="heroStatusBadge">Sin conexión</span></div>
+        <p class="sub" id="heroMsg">Conecta tu ESP32 o activa el modo demostración para ver tus signos vitales en tiempo real.</p>
+        <button class="btn btn-primary" id="btnStartReview">Iniciar revisión</button>
+      </div>
+    </div>
+
+    <div class="daily-grid">
+      <div class="daily-card tip-card">
+        <div class="daily-head"><span class="daily-icon">💡</span><h3>Consejo del día</h3></div>
+        <p id="dailyTipText">Cargando consejo…</p>
+      </div>
+      <div class="daily-card fact-card">
+        <div class="daily-head"><span class="daily-icon">🧠</span><h3>Dato curioso de salud</h3></div>
+        <p id="dailyFactText">Cargando dato curioso…</p>
+      </div>
+    </div>
+
+    <div class="vitals-grid" id="vitalsGrid"></div>
+
+    <!-- Última revisión tomada (aparece al terminar los 13 segundos) -->
+    <div class="last-review hidden" id="lastReviewCard">
+      <div class="section-head" style="margin-bottom:10px;">
+        <div><h3>✅ Última revisión</h3><p id="lastReviewTime">--</p></div>
+        <button class="btn btn-ghost btn-sm" id="btnLastReviewOpen" type="button">Ver detalle</button>
+      </div>
+      <div class="result-grid" id="lastReviewGrid" style="margin:0 0 12px;"></div>
+      <div class="interpretation-box" id="lastReviewText" style="margin-bottom:0;"></div>
+    </div>
+
+    <div class="section-head">
+      <div><h3>Última lectura</h3><p id="lastUpdateText">Aún no se ha recibido ninguna lectura</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== REVISIÓN ===================== -->
+  <section class="view" id="view-revision">
+    <div id="reviewIdle" class="review-stage">
+      <div class="baymax-face" data-status="normal"><div class="mascot-shadow"></div><div class="mascot-body"><span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span><span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span><span class="mascot-chest"></span></div><div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div></div>
+      <h3>Listo para tu revisión</h3>
+      <p id="reviewIdleMsg">Cuando quieras, presiona el botón y te voy guiando paso a paso.</p>
+      <button class="btn btn-primary btn-lg" id="btnBeginScan">Iniciar revisión</button>
+    </div>
+
+    <div id="reviewScanning" class="review-stage hidden">
+      <div class="scan-steps">
+        <div class="scan-step" id="scanStep1" data-active="true">
+          <span class="scan-step-num">1</span>
+          <div class="scan-step-body"><strong>Coloca tu dedo</strong><p>Pon tu dedo sobre el sensor de pulso. Cuando lo detecte, empiezo a medir.</p></div>
+        </div>
+        <div class="scan-step" id="scanStep2">
+          <span class="scan-step-num">2</span>
+          <div class="scan-step-body"><strong>No muevas el dedo</strong><p>Voy a medir durante 13 segundos. Si lo quitas antes, empezamos de nuevo.</p></div>
+        </div>
+        <div class="scan-step" id="scanStep3">
+          <span class="scan-step-num">3</span>
+          <div class="scan-step-body"><strong>Analizando</strong><p>Calculo el promedio de tus mediciones.</p></div>
+        </div>
+        <div class="scan-step" id="scanStep4">
+          <span class="scan-step-num">4</span>
+          <div class="scan-step-body"><strong>¡Revisión tomada!</strong><p>Ya tomé tu revisión. Verifícala en el Panel principal o aquí mismo.</p></div>
+        </div>
+      </div>
+      <div class="scan-face-stage">
+        <div class="baymax-face" id="scanFace" data-status="scanning">
+          <div class="mascot-shadow"></div>
+          <div class="mascot-body">
+            <span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span>
+            <span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span>
+            <button type="button" class="mascot-chest scan-heart" id="scanHeartBtn" aria-label="Mantén presionado aquí para iniciar la lectura">
+              <svg class="scan-heart-ring" viewBox="0 0 36 36" aria-hidden="true">
+                <circle class="ring-bg" cx="18" cy="18" r="15"></circle>
+                <circle class="ring-fill" id="scanRingFill" cx="18" cy="18" r="15"></circle>
+              </svg>
+              <span class="scan-heart-icon">❤</span>
+            </button>
+          </div>
+          <div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div>
+        </div>
+      </div>
+      <h3 id="scanTitle">Paso 1 de 4 — Coloca tu dedo en el sensor</h3>
+      <p id="scanMsg">Pon tu dedo sobre el sensor de pulso. Apenas lo detecte, empiezo a medir.</p>
+      <div class="scan-countdown hidden" id="scanCountdown">13</div>
+      <p class="scan-hint hidden" id="scanReleaseHint">Quitaste el dedo antes de tiempo 😅 Vuelve a colocarlo y empiezo de nuevo.</p>
+      <div class="stage-actions hidden" id="scanDoneActions">
+        <button class="btn btn-ghost" id="btnScanGoPanel" type="button">Verificar en el Panel principal</button>
+        <button class="btn btn-primary" id="btnScanSeeResults" type="button">Ver resultado aquí</button>
+      </div>
+    </div>
+
+    <div id="reviewResults" class="review-stage hidden">
+      <div class="baymax-face" id="resultFace" data-status="normal"><div class="mascot-shadow"></div><div class="mascot-body"><span class="mascot-arm mascot-arm-l"></span><span class="mascot-arm mascot-arm-r"></span><span class="mascot-leg mascot-leg-l"></span><span class="mascot-leg mascot-leg-r"></span><span class="mascot-chest"></span></div><div class="mascot-head"><div class="eye"><span class="pupil"></span></div><div class="eye"><span class="pupil"></span></div></div></div>
+      <h3>Tu revisión ha terminado</h3>
+      <p>Estos son los valores que registré:</p>
+      <div class="done-note">✅ Ya tomé tu revisión. También puedes verificarla en el <b>Panel principal</b>.
+        <button class="btn btn-ghost btn-sm" id="btnResultGoPanel" type="button">Ir al Panel principal</button></div>
+      <div class="result-grid" id="resultGrid"></div>
+      <div class="interpretation-box" id="interpretationBox"></div>
+      <div class="rec-list" id="recList"></div>
+      <div class="stage-actions">
+        <button class="btn btn-ghost" id="btnDiscardReview">Descartar</button>
+        <button class="btn btn-primary" id="btnSaveReview">Guardar y enviar por correo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LATIDOS ===================== -->
+  <section class="view" id="view-latidos">
+    <div class="section-head"><div><h3>Simulación de latidos</h3><p>Visualiza tu ritmo cardíaco en tiempo real</p></div></div>
+    <div class="heartbeat-card">
+      <div class="heartbeat-visual">
+        <svg viewBox="0 0 200 200" class="heart-svg" id="heartSvg">
+          <path id="heartPath" d="M100,175 C40,130 10,90 10,55 C10,25 35,5 62,5 C82,5 96,17 100,35 C104,17 118,5 138,5 C165,5 190,25 190,55 C190,90 160,130 100,175 Z"/>
+        </svg>
+        <div class="heartbeat-ring r1"></div>
+        <div class="heartbeat-ring r2"></div>
+      </div>
+      <div class="heartbeat-info">
+        <div class="heartbeat-bpm"><span id="heartbeatBpmValue">--</span><small>BPM</small></div>
+        <p id="heartbeatStatusText">Conecta tu ESP32 o activa el modo demostración para ver tu ritmo cardíaco.</p>
+        <canvas id="heartbeatWave"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BIENESTAR ===================== -->
+  <section class="view" id="view-bienestar">
+    <div class="section-head"><div><h3>¿Cómo te sentís?</h3><p>Contame y ajusto mis recomendaciones</p></div></div>
+    <div class="mood-grid" id="wellnessMoodGrid" style="max-width:560px;">
+      <button class="mood-btn" data-mood="Muy bien" type="button">😊<span>Muy bien</span></button>
+      <button class="mood-btn" data-mood="Bien" type="button">🙂<span>Bien</span></button>
+      <button class="mood-btn" data-mood="Normal" type="button">😐<span>Normal</span></button>
+      <button class="mood-btn" data-mood="Mal" type="button">😔<span>Mal</span></button>
+      <button class="mood-btn" data-mood="Muy mal" type="button">😣<span>Muy mal</span></button>
+    </div>
+    <div class="conn-card" id="wellnessSupportBox" style="display:none;">
+      <h3>Estoy acá para acompañarte</h3>
+      <p>No puedo reemplazar a un profesional, pero sí puedo escucharte. Si te sentís muy mal, hablá con una persona de confianza o busca ayuda profesional lo antes posible.</p>
+    </div>
+
+    <div class="anxiety-card">
+      <div class="daily-head"><span class="daily-icon">🌿</span><h3>¿Sentís ansiedad o estrés en este momento?</h3></div>
+      <p>Estos pequeños pasos pueden ayudarte a bajar la intensidad. No sustituyen la ayuda de un profesional.</p>
+      <ul class="anxiety-tips">
+        <li>Respirá contando 4 segundos al inhalar, 4 al sostener y 6 al exhalar.</li>
+        <li>Nombrá 5 cosas que ves, 4 que podés tocar, 3 que escuchás, 2 que olés y 1 que saboreás.</li>
+        <li>Apoyá los pies en el piso y notá el contacto, despacio.</li>
+        <li>Tomá un vaso de agua y bebé lento.</li>
+      </ul>
+      <button class="btn btn-primary" id="btnAnxietyBreathing">Empezar respiración guiada</button>
+    </div>
+
+    <div class="section-head" style="margin-top:26px;"><div><h3>Ejercicio de respiración</h3><p>Una pausa corta puede ayudar a bajar la ansiedad</p></div>
+      <button class="btn btn-primary" id="btnStartBreathing">Comenzar</button>
+    </div>
+    <div class="review-stage hidden" id="breatheStage">
+      <div class="breathe-wrap">
+        <div class="breathe-orb" id="breatheOrb"></div>
+        <div class="breathe-phase" id="breathePhase">Inhalar</div>
+        <div class="breathe-count" id="breatheCount">4</div>
+        <button class="btn btn-ghost" id="btnStopBreathing">Detener</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ECG ===================== -->
+  <section class="view" id="view-ecg">
+    <div class="ecg-card monitor-card">
+      <div class="monitor-top">
+        <h3>Monitor de ECG en vivo</h3>
+        <span class="monitor-live"><i></i> En vivo</span>
+      </div>
+      <div class="monitor-body">
+        <canvas id="ecgCanvas"></canvas>
+        <div class="monitor-side">
+          <div class="mon-box mon-hr"><span class="mon-label">FC · BPM</span><span class="mon-num" id="monBpm">--</span><span class="mon-sub" id="monBpmSrc"></span></div>
+          <div class="mon-box mon-spo2"><span class="mon-label">SpO₂ · %</span><span class="mon-num" id="monSpo2">--</span></div>
+          <div class="mon-box mon-temp"><span class="mon-label">TEMP. CORPORAL · °C</span><span class="mon-num" id="monTemp">--</span></div>
+          <div class="mon-box mon-amb"><span class="mon-label">TEMP. AMBIENTE · °C</span><span class="mon-num" id="monAmb">--</span></div>
+          <div class="mon-box mon-sound"><span class="mon-label">SONIDO</span><span class="mon-num" id="monSound">--</span></div>
+        </div>
+      </div>
+      <div class="ecg-value">Valor actual: <span id="ecgValue">--</span> <small style="font-size:13px;color:var(--muted,#7a8196);font-weight:700;">(lectura real del AD8232, 0–4095)</small></div>
+    </div>
+  </section>
+
+  <!-- ===================== HISTORIAL ===================== -->
+  <section class="view" id="view-historial">
+    <div class="section-head"><div><h3>Mis revisiones</h3><p>Revisiones guardadas manualmente</p></div></div>
+    <div id="reviewsList"></div>
+
+    <div class="section-head" style="margin-top:24px;"><div><h3>Lecturas en bruto</h3><p>Últimas 12 mediciones recibidas del ESP32</p></div></div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Hora</th><th>Pulso</th><th>Oxígeno</th><th>Temp. corp.</th><th>Temp. amb.</th><th>Sonido</th></tr></thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== NOTIFICACIONES ===================== -->
+  <section class="view" id="view-notif">
+    <div class="section-head">
+      <div><h3>Avisos de Baymax</h3><p>Cambios de estado en tus signos vitales</p></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" id="btnPermission">Activar notificaciones</button>
+        <button class="btn btn-ghost" id="btnTestVoice">🔊 Probar voz</button>
+        <button class="btn btn-primary" id="btnTestNotif">Enviar aviso de prueba</button>
+      </div>
+    </div>
+    <div class="notif-list" id="notifList"></div>
+  </section>
+
+  <!-- ===================== SISTEMA ===================== -->
+  <section class="view" id="view-sistema">
+    <div class="section-head"><div><h3>Estado del hardware</h3><p>Baymax Smart Solutions</p></div></div>
+    <div class="system-list" id="systemList"></div>
+  </section>
+
+  <!-- ===================== CONFIGURACIÓN ===================== -->
+  <section class="view" id="view-config">
+    <div class="section-head"><div><h3>Mi perfil</h3></div></div>
+    <div class="prefs profile-summary" id="profileSummary"></div>
+
+    <div class="section-head"><div><h3>Salud y contacto de emergencia</h3><p>Todo es opcional</p></div></div>
+    <div class="prefs">
+      <div class="modal-field">
+        <label>¿Tomás algún medicamento?</label>
+        <div class="yn-row" data-yn="meds">
+          <button type="button" class="yn-btn" data-val="no">No</button>
+          <button type="button" class="yn-btn" data-val="si">Sí</button>
+        </div>
+        <input type="text" id="cfgMedsDetail" class="hidden" placeholder="¿Cuál?" maxlength="120">
+      </div>
+      <div class="modal-field">
+        <label>¿Padecés alguna enfermedad?</label>
+        <div class="yn-row" data-yn="cond">
+          <button type="button" class="yn-btn" data-val="no">No</button>
+          <button type="button" class="yn-btn" data-val="si">Sí</button>
+        </div>
+        <input type="text" id="cfgCondDetail" class="hidden" placeholder="¿Cuál?" maxlength="120">
+      </div>
+      <div class="reg-grid">
+        <div class="modal-field"><label for="cfgEmgName">Contacto de emergencia</label><input type="text" id="cfgEmgName" placeholder="Nombre"></div>
+        <div class="modal-field"><label for="cfgEmgPhone">Teléfono</label><input type="tel" id="cfgEmgPhone" placeholder="Ej. 7123 4567"></div>
+        <div class="modal-field span2"><label for="cfgEmgEmail">Correo</label><input type="email" id="cfgEmgEmail" placeholder="contacto@ejemplo.com"></div>
+      </div>
+      <span class="field-error" id="errCfgEmg"></span>
+      <div class="danger-row" style="margin-top:6px;">
+        <button class="btn btn-primary btn-sm" id="btnSaveHealth" type="button">Guardar</button>
+        <button class="btn btn-ghost btn-sm" id="btnSendEmgReports" type="button">Enviar últimos reportes al contacto</button>
+      </div>
+    </div>
+
+    <div class="section-head"><div><h3>Foto de perfil / avatar</h3><p>Elegí vos mismo tu foto o avatar cuando quieras</p></div></div>
+    <div class="modal-field">
+      <div class="photo-row">
+        <div class="photo-preview empty" id="cfgPhotoPreview">📷</div>
+        <div class="photo-actions">
+          <input type="file" id="cfgPhotoInput" accept="image/*" class="hidden">
+          <button class="btn btn-ghost btn-sm" id="btnCfgPhotoUpload" type="button">Subir imagen</button>
+          <button class="btn btn-ghost btn-sm" id="btnCfgPhotoCamera" type="button">Tomar foto</button>
+          <button class="btn btn-ghost btn-sm" id="btnCfgPhotoAvatar" type="button">Elegir avatar</button>
+          <button class="btn btn-ghost btn-sm hidden" id="btnCfgPhotoRemove" type="button">Quitar</button>
+        </div>
+      </div>
+      <div class="avatar-grid hidden" id="cfgAvatarGrid"></div>
+      <div class="camera-box hidden" id="cfgCameraBox">
+        <video id="cfgCameraVideo" autoplay playsinline></video>
+        <div class="camera-actions">
+          <button class="btn btn-primary btn-sm" id="btnCfgCameraShot" type="button">Capturar</button>
+          <button class="btn btn-ghost btn-sm" id="btnCfgCameraCancel" type="button">Cancelar</button>
+        </div>
+      </div>
+      <canvas id="cfgCameraCanvas" class="hidden"></canvas>
+    </div>
+
+    <div class="section-head"><div><h3>Apariencia</h3></div></div>
+    <div class="prefs">
+      <div class="pref-row"><div class="ptxt"><strong>Modo oscuro</strong><span>Cambia los colores de toda la interfaz</span></div><label class="switch"><input type="checkbox" id="prefDark"><span class="slider"></span></label></div>
+      <div class="pref-row"><div class="ptxt"><strong>Animaciones</strong><span>Desactiva parpadeo, seguimiento de ojos y transiciones</span></div><label class="switch"><input type="checkbox" id="prefAnim" checked><span class="slider"></span></label></div>
+      <div class="pref-row"><div class="ptxt"><strong>Sonido</strong><span>Sonidos de la interfaz</span></div><label class="switch"><input type="checkbox" id="prefSound" checked><span class="slider"></span></label></div>
+      <div class="pref-row"><div class="ptxt"><strong>Voz</strong><span>Baymax habla sus respuestas</span></div><label class="switch"><input type="checkbox" id="prefVoice" checked><span class="slider"></span></label></div>
+      <div class="pref-row"><div class="ptxt"><strong>Tono de voz robótico</strong><span>Aplica un efecto de voz más parecido a un robot de cuidado</span></div><label class="switch"><input type="checkbox" id="prefRobotVoice" checked><span class="slider"></span></label></div>
+    </div>
+    <div class="section-head"><div><h3>Privacidad</h3></div></div>
+    <div class="prefs">
+      <div class="pref-row"><div class="ptxt"><strong>Datos guardados</strong><span>Todo se guarda solo en este navegador (localStorage), incluyendo tu correo, que solo se usa para simular el envío del resumen de tus revisiones</span></div></div>
+    </div>
+    <div class="danger-row">
+      <button class="btn btn-ghost" id="btnClearHistory">Eliminar historial</button>
+      <button class="btn btn-ghost" id="btnClearProfile">Eliminar perfil</button>
+      <button class="btn btn-ghost" id="btnClearPhotos">Eliminar fotografías</button>
+    </div>
+  </section>
+
+  <!-- ===================== CONEXIÓN ===================== -->
+  <section class="view" id="view-conexion">
+    <div class="conn-card">
+      <h3>Conectar con tu ESP32</h3>
+      <p>Escribe la dirección WebSocket de tu dispositivo en tu red local y presiona conectar. Esta es la misma conexión que ya usa tu dashboard "BayMax Smart Solutions".</p>
+      <div class="conn-form">
+        <input type="text" id="wsUrl" placeholder="ws://192.168.1.100:81">
+        <button class="btn btn-primary" id="btnConnect">Conectar</button>
+        <button class="btn btn-ghost" id="btnDisconnect">Desconectar</button>
+      </div>
+      <div class="log" id="connLog"></div>
+      <div class="toggle-row"><label class="switch"><input type="checkbox" id="simToggle"><span class="slider"></span></label><span>Usar modo demostración (datos simulados) mientras no hay ESP32 conectado</span></div>
+      <p class="note-inline" id="noConnNote">Mientras no haya un ESP32 real conectado ni el modo demostración activo, la aplicación no mostrará valores inventados: los signos vitales permanecerán en "--".</p>
+    </div>
+    <div class="conn-card">
+      <h3>Formato de datos que espera la página</h3>
+      <p>Tu ESP32 debe enviar por WebSocket un mensaje JSON como este (el mismo formato que ya usa tu código funcional):</p>
+      <div class="schema">{
+  "bpm": 72,
+  "spo2": 98,
+  "tempCorp": 36.5,
+  "tempAmb": 24.0,
+  "sound": 30,
+  "ecg": 2048
+}</div>
+    </div>
+  </section>
+
+  <!-- ===================== WHATSAPP FLOTANTE (contacto de emergencia) ===================== -->
+  <button class="wa-float" id="waFloat" type="button" hidden>
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16.003 3C9.374 3 4 8.373 4 15c0 2.116.553 4.18 1.6 6L4 29l8.2-1.57A11.93 11.93 0 0 0 16.003 27C22.63 27 28 21.627 28 15S22.63 3 16.003 3zm0 21.8c-1.8 0-3.56-.484-5.1-1.4l-.366-.217-4.86.93.95-4.73-.238-.378A9.76 9.76 0 0 1 6.2 15c0-5.42 4.4-9.8 9.8-9.8s9.8 4.38 9.8 9.8-4.4 9.8-9.797 9.8zm5.38-7.33c-.295-.148-1.744-.86-2.014-.958-.27-.1-.467-.148-.664.148-.196.295-.76.958-.932 1.155-.172.196-.344.22-.64.074-.295-.148-1.245-.459-2.37-1.462-.876-.78-1.467-1.745-1.64-2.04-.17-.295-.018-.455.13-.602.133-.132.295-.344.443-.516.148-.172.197-.295.295-.492.1-.197.05-.37-.024-.516-.074-.148-.664-1.6-.91-2.19-.24-.575-.483-.497-.664-.506l-.566-.01a1.09 1.09 0 0 0-.787.37c-.27.295-1.033 1.01-1.033 2.462s1.058 2.856 1.206 3.053c.148.197 2.08 3.176 5.04 4.454.704.304 1.254.486 1.682.622.707.225 1.35.193 1.858.117.567-.085 1.744-.713 1.99-1.4.245-.69.245-1.28.172-1.403-.074-.123-.27-.197-.566-.345z"/></svg>
+    <span class="wa-float-text" id="waFloatText">Enviar por WhatsApp</span>
+  </button>
+
+  <footer class="foot">Baymax Health Assistant · asistente de bienestar, no un diagnóstico médico</footer>
+
+  <!-- ===================== CHAT FLOTANTE (TADASHI) ===================== -->
+  <button class="chat-bubble-btn" id="chatBubbleBtn" type="button" aria-label="Abrir chat con Tadashi" aria-expanded="false">
+    <img class="chat-bubble-img" src="assets/img/tadashi.png" alt="" id="chatBubbleImg">
+    <span class="chat-bubble-label" id="chatBubbleIcon">Habla con Tadashi</span>
+    <span class="chat-bubble-dot" id="chatBubbleDot" hidden></span>
+  </button>
+
+  <div class="chat-float-panel" id="chatFloatPanel" hidden>
+    <div class="chat-float-head">
+      <div class="chat-float-head-info">
+        <img class="chat-float-avatar" src="assets/img/tadashi.png" alt="Tadashi">
+        <div>
+          <h3>Tadashi</h3>
+          <p>Tu asistente de bienestar</p>
+        </div>
+      </div>
+      <button class="chat-float-close" id="btnChatFloatClose" type="button" aria-label="Cerrar chat">✕</button>
+    </div>
+    <div class="chat-card chat-card-float">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-quick">
+        <button class="chip-btn" data-q="¿Cómo estoy?">¿Cómo estoy?</button>
+        <button class="chip-btn" data-q="¿Cuál es mi pulso?">¿Cuál es mi pulso?</button>
+        <button class="chip-btn" data-q="¿Está normal mi oxígeno?">¿Mi oxígeno?</button>
+        <button class="chip-btn" data-q="Muéstrame mis últimas mediciones">Últimas mediciones</button>
+        <button class="chip-btn" data-q="Me siento con ansiedad">Me siento ansioso/a</button>
+        <button class="chip-btn" data-q="Estoy muy cansado/a">Estoy cansado/a</button>
+        <button class="chip-btn" data-q="Me siento triste">Me siento triste</button>
+        <button class="chip-btn" data-q="Quiero hacer un ejercicio de respiración">Respiración</button>
+      </div>
+      <div class="chat-input-row">
+        <button class="mic-btn" id="btnMic" type="button" title="Hablar con Tadashi">🎙️</button>
+        <input type="text" id="chatInput" placeholder="Escríbele a Tadashi...">
+        <button class="btn btn-primary" id="btnChatSend">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=13"></script>
+</body>
+</html>
